@@ -31,7 +31,7 @@ const server = net.createServer(socket =>
           if(lastChar=="#")
           {
             let broadcast = msg.replace("#", "");
-            clients.forEach(socket.write(broadcast));
+            //clients.forEach(socket.write(broadcast)); ERRORE!!!!
           }
           else
           {
@@ -43,7 +43,7 @@ const server = net.createServer(socket =>
     });
 
     socket.on('end', () =>{
-        if(all)
+        if(all == true)
         {
           clients.forEach(socket.end);
           console.log('all clients disconnected');
@@ -59,7 +59,6 @@ server.listen(port, () => {
 });
 
 server.on('connection', () => {
-        
     console.log('someone connected');
 });
 
