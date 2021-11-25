@@ -1,7 +1,6 @@
 const { Socket } = require('dgram');
 const net = require('net');
 const port = 7979;
-const all=false; 
 const clients = [];
 
 const server = net.createServer(socket => 
@@ -23,15 +22,21 @@ const server = net.createServer(socket =>
         }
         else if((msg2=="quitall"))
         {
-          all=true;
+            for(var i of clients)
+              i.end();
+            
+            console.log("all clients disconnected");
         }
         else
         {
           let lastChar=msg.charAt(msg.length-3);
+          let broadcast = msg.replace("#","");
           if(lastChar=="#")
           {
-            let broadcast = msg.replace("#", "");
-            //clients.forEach(socket.write(broadcast)); ERRORE!!!!
+              for(var i of clients)
+                i.write(broadcast);
+
+              msg="";
           }
           else
           {
@@ -43,12 +48,7 @@ const server = net.createServer(socket =>
     });
 
     socket.on('end', () =>{
-        if(all == true)
-        {
-          clients.forEach(socket.end);
-          console.log('all clients disconnected');
-        }
-        else
+
           console.log('client disconnected');
     });
 
